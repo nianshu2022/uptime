@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uptime Monitor</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div id="app" class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold mb-6">Uptime Monitor</h1>
+        
+        <!-- 添加监控表单 -->
+        <div class="bg-white p-4 rounded shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">添加监控</h2>
+            <div class="flex gap-4">
+                <input v-model="newMonitor.name" placeholder="网站名称" class="border p-2 rounded flex-1">
+                <input v-model="newMonitor.url" placeholder="URL (https://...)" class="border p-2 rounded flex-2">
+                <input v-model="newMonitor.keyword" placeholder="关键词 (可选)" class="border p-2 rounded flex-1">
+                <button @click="addMonitor" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">添加</button>
+            </div>
+        </div>
+
+        <!-- 监控列表 -->
+        <div class="grid gap-4">
+            <div v-for="m in monitors" :key="m.id" class="bg-white p-4 rounded shadow flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-lg">{{ m.name }}</h3>
+                    <a :href="m.url" target="_blank" class="text-blue-500 text-sm hover:underline">{{ m.url }}</a>
+                    <div v-if="m.keyword" class="text-xs text-gray-400">关键词: {{ m.keyword }}</div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span :class="statusClass(m.status)" class="px-3 py-1 rounded text-sm font-bold">
+                        {{ m.status }}
+                    </span>
+                    <div class="text-right text-sm text-gray-500">
+                        <div>上次检查: {{ formatDate(m.last_check) }}</div>
+                        <div v-if="m.status === 'RETRYING'">重试: {{ m.retry_count }}/3</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 重要：部署后请将此处替换为你 Worker 的实际地址
+        // 例如: https://uptime-worker.你的名字.workers.dev
+        const API_BASE = 'https://uptime-worker.2478951652.workers.dev'; 
+
+        const { createApp, ref, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                const monitors = ref([]);
+                const newMonitor = ref({ name: '', url: '', keyword: '' });
+
+                const fetchMonitors = async () => {
+                    try {
+                        const res = await fetch(`${API_BASE}/monitors`);
+                        if (!res.ok) throw new Error('Failed to fetch');
+                        monitors.value = await res.json();
+                    } catch (e) {
+                        console.error(e);
+                    }
+                };
+
+                const addMonitor = async () => {
+                    if (!newMonitor.value.name || !newMonitor.value.url) return;
+                    try {
+                        const res = await fetch(`${API_BASE}/monitors`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(newMonitor.value)
+                        });
+                        if (res.ok) {
+                            newMonitor.value = { name: '', url: '', keyword: '' };
+                            fetchMonitors();
+                        } else {
+                            alert('添加失败');
+                        }
+                    } catch (e) {
+                        alert('网络错误');
+                    }
+                };
+
+                const statusClass = (status) => {
+                    if (status === 'UP') return 'bg-green-100 text-green-800';
+                    if (status === 'DOWN') return 'bg-red-100 text-red-800';
+                    return 'bg-yellow-100 text-yellow-800';
+                };
+
+                const formatDate = (str) => {
+                    if (!str) return '从未';
+                    return new Date(str).toLocaleString();
+                };
+
+                onMounted(fetchMonitors);
+
+                return { monitors, newMonitor, addMonitor, statusClass, formatDate };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
+

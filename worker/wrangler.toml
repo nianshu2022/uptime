@@ -1,0 +1,15 @@
+name = "uptime-worker"
+main = "src/index.ts"
+compatibility_date = "2024-02-08"
+
+# 定时任务：每分钟触发一次，用于检查是否需要重试或进行常规监测
+[triggers]
+crons = ["* * * * *"]
+
+# D1 数据库配置
+# 请在终端运行 'npx wrangler d1 create uptime-db' 获取 database_id 并替换下方的值
+[[d1_databases]]
+binding = "DB"
+database_name = "uptime-db"
+database_id = "dcf229c0-f9ce-4678-9104-72675f173636"
+

@@ -1,0 +1,19 @@
+{
+  "name": "uptime-worker",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240208.0",
+    "wrangler": "^3.28.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "hono": "^4.0.4"
+  }
+}
+
