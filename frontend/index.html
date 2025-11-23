@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Status</title>
+    <!-- Favicon: 绿色闪电 SVG -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.3.4/vue.global.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -48,6 +50,29 @@
         }
         .animate-pulse-slow {
             animation: pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; /* Light mode: slate-300 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; /* Light mode hover: slate-400 */
+        }
+        /* 深色模式滚动条 */
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155; /* Dark mode: slate-700 */
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569; /* Dark mode hover: slate-600 */
         }
     </style>
 </head>
