@@ -33,7 +33,7 @@ npx wrangler d1 create uptime-db
 
 *   **database_id**: 填入上一步生成的 ID。
 *   **vars**:
-    *   `DINGTALK_ACCESS_TOKEN`: 你的钉钉机器人 Token。
+    *   `DINGTALK_ACCESS_TOKEN`: 你的钉钉机器人 Token，Webhook 地址中的 Access Token 部分。
     *   `DINGTALK_SECRET`: 你的钉钉机器人加签密钥。
     *   `ADMIN_PASSWORD`: 设置你的后台管理密码。
 
