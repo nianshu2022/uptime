@@ -13,3 +13,8 @@ binding = "DB"
 database_name = "uptime-db"
 database_id = "dcf229c0-f9ce-4678-9104-72675f173636"
 
+# 配置环境变量
+[var]
+DINGTALK_ACCESS_TOKEN = ""
+DINGTALK_SECRET = ""
+ADMIN_PASSWORD = ""
